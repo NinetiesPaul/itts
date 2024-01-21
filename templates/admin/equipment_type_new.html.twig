@@ -1,0 +1,18 @@
+{% extends 'admin/home.html.twig' %}
+
+{% block title %}Equipments Type{% endblock %}
+
+{% block body %}
+    <div class="container border rounded" style="margin-top: 2em; min-height: 20em">
+        <h2>IT TroubleShooting - Equipments Type</h2>
+
+        <form action="{{ path('create_equipment_type') }}" method="post" >
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="">
+            </div>
+
+            <button type="submit" class="btn btn-primary ">Save</button>
+        </form>
+    </div>
+{% endblock %}

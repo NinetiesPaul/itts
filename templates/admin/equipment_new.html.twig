@@ -1,0 +1,42 @@
+{% extends 'admin/home.html.twig' %}
+
+{% block title %}Equipments{% endblock %}
+
+{% block body %}
+    <div class="container border rounded" style="margin-top: 2em; min-height: 20em">
+        <h2>IT TroubleShooting - Equipments</h2>
+
+        <form action="{{ path('create_equipment') }}" method="post" >
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="">
+            </div>
+            <div class="mb-3">
+                <label for="sn" class="form-label">Serial number:</label>
+                <input type="text" class="form-control" id="sn" name="sn" placeholder="">
+            </div>
+            <div class="mb-3">
+                <label for="value" class="form-label">Value</label>
+                <input type="number" class="form-control" id="value" name="value" placeholder="">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-check-label" for="is_part">Is equipment part?</label><br/>
+                <input class="form-check-input" type="checkbox" name="is_part" id="is_part">
+            </div>
+
+            <div class="mb-3">
+                <label for="value" class="form-label">Equipment Type</label>
+                <select class="form-select" id="type_id" name="type_id" aria-label="Default select example">
+                    {% for type in types %}
+                        <option value="{{ type.id }}">{{ type.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            
+
+            <button type="submit" class="btn btn-primary ">Save</button>
+        </form>  
+    </div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'admin/home.html.twig' %}
+
+{% block title %}Equipments{% endblock %}
+
+{% block body %}
+    <div class="container border rounded" style="margin-top: 2em; min-height: 20em">
+        <h2>IT TroubleShooting - Equipments</h2>
+
+        <form action="{{ path('update_equipment') }}" method="post" >
+            <input type="hidden" name="id" value={{ equipment.id }}>
+            <input type="hidden" name="_method" value="put" />
+            
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="" value={{ equipment.name }}>
+            </div>
+            <div class="mb-3">
+                <label for="sn" class="form-label">Serial number:</label>
+                <input type="text" class="form-control" id="sn" name="sn" placeholder="" value={{ equipment.sn }}>
+            </div>
+            <div class="mb-3">
+                <label for="value" class="form-label">Value</label>
+                <input type="number" class="form-control" id="value" name="value" placeholder="" value={{ equipment.value }}>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-check-label" for="is_part">Is equipment part?</label><br/>
+                <input class="form-check-input" type="checkbox" name="is_part" id="is_part" {{ (equipment.getIsPart()) ? 'checked' : '' }}>
+            </div>
+
+            <div class="mb-3">
+                <label for="value" class="form-label">Equipment Type</label>
+                <select class="form-select" id="type_id" name="type_id" aria-label="Default select example">
+                    {% for type in types %}
+                        <option value="{{ type.id }}" {{ (equipment.getEquipmentType.id == type.id) ? 'selected' : '' }} >{{ type.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            
+
+            <button type="submit" class="btn btn-primary ">Save</button>
+        </form>  
+    </div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'admin/home.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).on('click', '#delete', function(){
+            var userId = $(this).closest("tr")[0].dataset['id'];
+
+            $.ajax({
+                type: 'DELETE',
+                url: '/admin/users',
+                data: {
+                    id: userId
+                },
+                success: function(response){
+                    $('#row_' + userId).fadeOut(400, function(){
+                        $(this).remove();
+                    });
+                },
+                error: function (xhr, error, code){
+                },
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container border rounded" style="margin-top: 2em; min-height: 20em">
+        <h2>IT TroubleShooting - Users</h2>
+
+        <a class='btn btn-light' href="{{ url('users_form') }}">New User</a>
+
+        <table class="table" id="spaceshipsTable">
+            <thead>
+                <tr>
+                    <td><b>Name</b></td>
+                    <td><b>E-mail</b></td>
+                    <td><b>Roles</b></td>
+                    <td><b>Department</b></td>
+                    <td style="width: 10%"><b>Actions</b></td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr id="row_{{ user.id }}" data-id="{{ user.id }}">
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ formatUserRoles(user.roles)   }}</td>
+                        <td>{{ user.getDepartment.title }}</td>
+                        <td>
+                            <a href="/admin/users/{{user.id}}" class="btn btn-sm btn-primary"  href="#"><i class="bi bi-pencil-square"></i></a>
+                            <a class="btn btn-sm btn-danger" id="delete" href="#"><i class="bi bi-trash"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
