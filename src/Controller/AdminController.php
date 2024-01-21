@@ -6,6 +6,7 @@ use App\Entity\Department;
 use App\Entity\Equipment;
 use App\Entity\EquipmentType;
 use App\Entity\Users;
+use App\Repository\EquipmentRepository;
 use App\Repository\UsersRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -229,8 +230,12 @@ class AdminController extends AbstractController
     {
         $equipmentTypes = $doctrine->getRepository(EquipmentType::class)->findAll();
 
+        $equipmentsRepository = new EquipmentRepository($doctrine);
+        $parts = $equipmentsRepository->findAllParts();
+
         return $this->render('admin/equipment_new.html.twig', [
             'types' => $equipmentTypes,
+            'parts' => $parts
         ]);
         
     }
