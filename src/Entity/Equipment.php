@@ -45,6 +45,11 @@ class Equipment
      */
     private $equipmentType;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Equipment::class)
+     */
+    private $has_parent;
+
     public function __construct()
     {
     }
@@ -110,6 +115,18 @@ class Equipment
     public function setEquipmentType(?EquipmentType $equipmentType): self
     {
         $this->equipmentType = $equipmentType;
+
+        return $this;
+    }
+
+    public function getHasParent(): ?self
+    {
+        return $this->has_parent;
+    }
+
+    public function setHasParent(?self $has_parent): self
+    {
+        $this->has_parent = $has_parent;
 
         return $this;
     }
