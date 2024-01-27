@@ -5,7 +5,7 @@
 {% block javascripts %}
     <script>
         $(document).on('change', '#is_part', function(){
-            if (!$(this).is(':checked')){
+            if ($(this).is(':checked')){
                 $('.partsList').css('display', 'block');
             } else {
                 $('.partsList').css('display', 'none');
@@ -29,7 +29,7 @@
             </div>
             <div class="mb-3">
                 <label for="value" class="form-label">Value</label>
-                <input type="number" class="form-control" id="value" name="value" placeholder="">
+                <input type="number" class="form-control" step="0.01"  id="value" name="value" placeholder="">
             </div>
 
             <div class="mb-3">
@@ -37,9 +37,10 @@
                 <input class="form-check-input" type="checkbox" name="is_part" id="is_part">
             </div>
 
-            <div class="mb-3 partsList">
-                <label for="value" class="form-label">Equipment Parts</label>
-                <select class="form-select" multiple id="part_id[]" name="part_id[]" aria-label="">
+            <div class="mb-3 partsList" style="display: none;">
+                <label for="value" class="form-label">Part belongs to</label>
+                <select class="form-select" id="parent_id" name="parent_id" aria-label="">
+                    <option value="" selected>Pick a equipment</option>
                     {% for part in parts %}
                         <option value="{{ part.id }}">{{ part.name }}</option>
                     {% endfor %}
@@ -55,7 +56,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary ">Save</button>
+            <button type="submit" class="btn btn-primary "><i class="bi bi-save"></i> Save</button>
         </form>  
     </div>
 {% endblock %}

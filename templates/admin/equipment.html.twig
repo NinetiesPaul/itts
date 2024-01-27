@@ -5,7 +5,7 @@
 {% block javascripts %}
     <script>
         $(document).on('click', '#delete', function(){
-            var equipmentId = $(this).closest("tr")[0].dataset['id'];
+            var equipmentId = $(this).closest("a")[0].dataset['id'];
 
             $.ajax({
                 type: 'DELETE',
@@ -17,6 +17,10 @@
                     $('#row_' + equipmentId).fadeOut(400, function(){
                         $(this).remove();
                     });
+
+                    if (response.payload.refresh) {
+                        location.reload();
+                    }
                 },
                 error: function (xhr, error, code){
                 },
@@ -29,12 +33,13 @@
     <div class="container border rounded" style="margin-top: 2em; min-height: 20em">
         <h2>IT TroubleShooting - Equipments</h2>
 
-        <a class='btn btn-light' href="{{ url('equipments_form') }}">New Equipment</a>
+        <a class='btn btn-light' href="{{ url('equipments_form') }}"><i class="bi-plus-circle"></i> New Equipment</a>
 
         <table class="table" id="spaceshipsTable">
             <thead>
                 <tr>
-                    <td><b>Name</b></td>
+                    <td><b>Id</b></td>
+                    <td style="width: 50%"><b>Name</b></td>
                     <td><b>Serial Number</b></td>
                     <td><b>Value</b></td>
                     <td><b>Is Part?</b></td>
@@ -44,15 +49,29 @@
             </thead>
             <tbody>
                 {% for equipment in equipments %}
-                    <tr id="row_{{ equipment.id }}" data-id="{{ equipment.id }}">
-                        <td>{{ equipment.name }}</td>
+                    <tr id="row_{{ equipment.id }}">
+                        <td>{{ equipment.id }}</td>
+                        <td>{{ equipment.name }}<br/>
+                            <small>
+                                {% if equipment.parts is defined %}
+                                    {% for part in equipment.parts %}
+                                        <span id="row_{{ part.getId() }}">
+                                            <i>{{ part.getName() }} (<b>SN:</b> {{ part.getSN() }}) </i> 
+                                            <a class="btn-primary" href="/admin/equipments/{{ part.getId() }}"><i class="bi bi-pencil-square"></i></a>
+                                            <a class="btn-danger" data-id="{{ part.getId() }}" id="delete" href="#"><i class="bi bi-trash"></i></a>
+                                            <br/>
+                                        </span>
+                                    {% endfor %}
+                                {% endif %}
+                            </small>
+                        </td>
                         <td>{{ equipment.sn }}</td>
                         <td>{{ equipment.value }}</td>
                         <td>{{ (equipment.getIsPart) ? "<i class='bi bi-hand-thumbs-up'></i>" : "<i class='bi bi-hand-thumbs-down'></i>" }}</td>
                         <td>{{ equipment.getEquipmentType.name }}</td>
                         <td>
                             <a class="btn btn-sm btn-primary" href="/admin/equipments/{{ equipment.id }}"><i class="bi bi-pencil-square"></i></a>
-                            <a class="btn btn-sm btn-danger" id="delete" href="#"><i class="bi bi-trash"></i></a>
+                            <a class="btn btn-sm btn-danger" data-id="{{ equipment.id }}" id="delete" href="#"><i class="bi bi-trash"></i></a>
                         </td>
                     </tr>
                 {% endfor %}
