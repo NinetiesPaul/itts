@@ -56,6 +56,16 @@
                 </select>
             </div>
 
+            <div class="mb-3">
+                <label for="value" class="form-label">Used by</label>
+                <select class="form-select" id="user_id" name="user_id" aria-label="">
+                    <option value=""></option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.getName() }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
             <button type="submit" class="btn btn-primary "><i class="bi bi-save"></i> Save</button>
         </form>  
     </div>

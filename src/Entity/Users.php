@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UsersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -44,6 +46,16 @@ class Users implements UserInterface
      * @ORM\JoinColumn(nullable=false)
      */
     private $department;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Equipment::class, mappedBy="user_id")
+     */
+    private $equipment;
+
+    public function __construct()
+    {
+        $this->equipment = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -146,6 +158,36 @@ class Users implements UserInterface
     public function setDepartment(?Department $department): self
     {
         $this->department = $department;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Equipment>
+     */
+    public function getEquipment(): Collection
+    {
+        return $this->equipment;
+    }
+
+    public function addEquipment(Equipment $equipment): self
+    {
+        if (!$this->equipment->contains($equipment)) {
+            $this->equipment[] = $equipment;
+            $equipment->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEquipment(Equipment $equipment): self
+    {
+        if ($this->equipment->removeElement($equipment)) {
+            // set the owning side to null (unless already changed)
+            if ($equipment->getUserId() === $this) {
+                $equipment->setUserId(null);
+            }
+        }
 
         return $this;
     }

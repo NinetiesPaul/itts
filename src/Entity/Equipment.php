@@ -50,6 +50,11 @@ class Equipment
      */
     private $has_parent;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="equipment")
+     */
+    private $user_id;
+
     public function __construct()
     {
     }
@@ -127,6 +132,18 @@ class Equipment
     public function setHasParent(?self $has_parent): self
     {
         $this->has_parent = $has_parent;
+
+        return $this;
+    }
+
+    public function getUserId(): ?Users
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(?Users $user_id): self
+    {
+        $this->user_id = $user_id;
 
         return $this;
     }

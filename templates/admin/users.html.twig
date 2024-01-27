@@ -34,6 +34,7 @@
         <table class="table" id="spaceshipsTable">
             <thead>
                 <tr>
+                    <td style="width: 5%"><b>Id</b></td>
                     <td><b>Name</b></td>
                     <td><b>E-mail</b></td>
                     <td><b>Roles</b></td>
@@ -44,6 +45,7 @@
             <tbody>
                 {% for user in users %}
                     <tr id="row_{{ user.id }}" data-id="{{ user.id }}">
+                        <td>{{ user.id }}</td>
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ formatUserRoles(user.roles)   }}</td>
