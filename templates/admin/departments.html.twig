@@ -34,6 +34,7 @@
         <table class="table" id="spaceshipsTable">
             <thead>
                 <tr>
+                    <td style="width: 5%"><b>Id</b></td>
                     <td><b>Name</b></td>
                     <td style="width: 10%"><b>Actions</b></td>
                 </tr>
@@ -41,6 +42,7 @@
             <tbody>
                 {% for department in departments %}
                     <tr id="row_{{ department.id }}" data-id="{{ department.id }}">
+                        <td>{{ department.id }}</td>
                         <td>{{ department.title }}</td>
                         <td>
                             <!--<a class="btn btn-sm btn-primary" href="#"><i class="bi bi-pencil-square"></i></a>-->

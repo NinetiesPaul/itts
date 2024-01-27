@@ -38,12 +38,13 @@
         <table class="table" id="spaceshipsTable">
             <thead>
                 <tr>
-                    <td><b>Id</b></td>
+                    <td style="width: 5%"><b>Id</b></td>
                     <td style="width: 50%"><b>Name</b></td>
                     <td><b>Serial Number</b></td>
                     <td><b>Value</b></td>
                     <td><b>Is Part?</b></td>
                     <td><b>Type</b></td>
+                    <td><b>Used by</b></td>
                     <td style="width: 10%"><b>Actions</b></td>
                 </tr>
             </thead>
@@ -69,6 +70,7 @@
                         <td>{{ equipment.value }}</td>
                         <td>{{ (equipment.getIsPart) ? "<i class='bi bi-hand-thumbs-up'></i>" : "<i class='bi bi-hand-thumbs-down'></i>" }}</td>
                         <td>{{ equipment.getEquipmentType.name }}</td>
+                        <td>{{ (equipment.getUserId()) ? equipment.getUserId().getName() : 'Available' }}</td>
                         <td>
                             <a class="btn btn-sm btn-primary" href="/admin/equipments/{{ equipment.id }}"><i class="bi bi-pencil-square"></i></a>
                             <a class="btn btn-sm btn-danger" data-id="{{ equipment.id }}" id="delete" href="#"><i class="bi bi-trash"></i></a>
