@@ -50,11 +50,21 @@ class EquipmentRepository extends ServiceEntityRepository
     // /**
     //  * @return Equipment[] Returns an array of Equipment objects
     //  */
-    
-    public function findAllParts()
+    public function findAllNotParts()
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.is_part = 1')
+            ->andWhere('u.is_part <> 1')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    
+    public function findAllMyParts($parentId)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.has_parent = :val')
+            ->setParameter('val', $parentId)
             ->orderBy('u.id', 'ASC')
             ->getQuery()
             ->getResult()
