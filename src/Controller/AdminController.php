@@ -242,9 +242,12 @@ class AdminController extends AbstractController
         $equipmentsRepository = new EquipmentRepository($doctrine);
         $parts = $equipmentsRepository->findAllNotParts();
 
+        $users = $doctrine->getRepository(Users::class)->findAll();
+
         return $this->render('admin/equipment_new.html.twig', [
             'types' => $equipmentTypes,
-            'parts' => $parts
+            'parts' => $parts,
+            'users' => $users
         ]);
         
     }
@@ -264,11 +267,14 @@ class AdminController extends AbstractController
             $myParts = $equipmentsRepository->findAllMyParts($equipment->getId());
         }
 
+        $users = $doctrine->getRepository(Users::class)->findAll();
+
         return $this->render('admin/equipment_view.html.twig', [
             'equipment' => $equipment,
             'types' => $equipmentTypes,
             'partsAvailable' => $partsAvailable,
-            'myParts' => $myParts
+            'myParts' => $myParts,
+            'users' => $users
         ]);
         
     }
@@ -290,6 +296,11 @@ class AdminController extends AbstractController
         if ($request->get('parent_id') !== "") {
             $parent = $doctrine->getRepository(Equipment::class)->find($request->get('parent_id'));
             $equipment->setHasParent($parent);
+        }
+
+        if ($request->get('user_id') !== "") {
+            $user = $doctrine->getRepository(Users::class)->find($request->get('user_id'));
+            $equipment->setUserId($user);
         }
 
         $entityManager->persist($equipment);
@@ -348,6 +359,13 @@ class AdminController extends AbstractController
             }
         } else {
             $equipment->setHasParent(null);
+        }
+
+        if ($request->get('user_id') !== "") {
+            $user = $doctrine->getRepository(Users::class)->find($request->get('user_id'));
+            $equipment->setUserId($user);
+        } else {
+            $equipment->setUserId(null);
         }
 
         $entityManager = $doctrine->getManager();
