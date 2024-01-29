@@ -1,0 +1,22 @@
+{% extends 'users/home.html.twig' %}
+
+{% block title %}Call #{{ call.getId() }}{% endblock %}
+
+{% block javascripts %}
+{% endblock %}
+
+{% block body %}
+   <div class="container border rounded" style="margin-top: 2em; min-height: 20em">
+        <h2>IT TroubleShooting - Call #{{ call.getId() }}</h2>
+        <br/>
+
+        <b>Created on:</b> {{ call.getOpenedOn().format('m-d-Y') }}<br/>
+        <b>Taken by:</b> {{ (call.getAnsweredBy()) ? 'Awnsered by' . call.getAnsweredBy() : "No one yet" }}
+
+        <hr/>
+        
+        {% for note in call.getNotes() %}
+            <b>Me</b> <small><i>{{ note.getSentOn.format('m-d-Y') }}</i></small>: {{ note.getText() }} <br/>
+        {% endfor %}
+    </div>
+{% endblock %}

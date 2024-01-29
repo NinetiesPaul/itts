@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}Admin Home{% endblock %}
 
 {% block javascripts %}
     <script>
@@ -21,6 +21,8 @@
                             Logged As <b>{{ app.user.name }}</b>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{ url('admin_calls') }}">Calls</a></li>
+                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ url('users') }}">Users</a></li>
                             <li><a class="dropdown-item" href="{{ url('departments') }}">Departments</a></li>
                             <li><a class="dropdown-item" href="{{ url('equipments') }} ">Equipments</a></li>
