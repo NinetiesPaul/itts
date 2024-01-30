@@ -1,0 +1,212 @@
+{% extends 'users/home.html.twig' %}
+
+{% block title %}Start a new Call{% endblock %}
+
+{% block javascripts %}
+    <script>
+
+        var whoValue = { id: null };
+        var whereValue = { id: null, description: "" };
+        var whenValue = { date: null };
+
+        $(document).on('change', '#who_select', function(){
+            var option = $(this).val();
+
+            if (option == "me") {
+                whoValue.id = {{ app.user.id }};
+
+                $(".whereSelect").fadeIn(400, function(){
+                    $(this).css('display', 'block')
+                });
+            }
+
+            if (option == "other") {
+                $.each(['Billy', 'Amanda', 'Anthony'], function(k, v){
+                    $("#other_select").append($('<option>', {
+                        value: k + 1,
+                        text: v
+                    }))
+                });
+
+                $(".whoSomeoneElse").fadeIn(400, function(){
+                    $(this).css('display', 'block')
+                });
+            }
+        });
+
+        $(document).on('change', '#other_select', function(){
+            var option = $(this).val();
+            whoValue.id = option;
+            
+            $(".whereSelect").fadeIn(400, function(){
+                $(this).css('display', 'block')
+            });
+        });
+
+        $(document).on('change', '#where_select', function(){
+            var option = $(this).val();
+
+            if (option == "device") {
+                $.each(['Monitor', 'Keyboard', 'Computer'], function(k, v){
+                    $("#where_device").append($('<option>', {
+                        value: k + 1,
+                        text: v
+                    }))
+                });
+
+                $(".whereDevice").fadeIn(400, function(){
+                    $(this).css('display', 'block')
+                });
+            }
+
+            if (option !== "") {
+                $(".whereDescription").fadeIn(400, function(){
+                    $(this).css('display', 'block')
+                });
+            }
+        });
+
+        $(document).on('change', '#where_device', function(){
+            var option = $(this).val();
+
+            if (option !== "") {
+                whereValue.id = $(this).val()
+            }
+        });
+
+        $(document).on('change', '.whereSelect textarea', function(){
+            var option = $(this).val();
+
+            whereValue.description = option;
+
+            if (option !== "") {
+                $(".whenSelect").fadeIn(400, function(){
+                    $(this).css('display', 'block')
+                });
+            }
+        });
+
+        $(document).on('change', '#when_select', function(){
+            var option = $(this).val();
+
+            if (option == "other") {
+                $(".whenDate").fadeIn(400, function(){
+                    $(this).css('display', 'block')
+                });
+            }
+
+            if (option == "now") {
+                whenValue.date = $.datepicker.formatDate('yy-mm-dd', new Date());
+
+                $(".confirm").fadeIn(400, function(){
+                    $(this).css('display', 'block')
+                });
+            }
+        });
+
+        $(document).on('change', '#when_date', function(){
+            var option = $(this).val();
+
+            whenValue.date = $.datepicker.formatDate('yy-mm-dd', new Date(option));
+
+            $(".confirm").fadeIn(400, function(){
+                $(this).css('display', 'block')
+            });
+        });
+
+        $(document).on('click', '.submit', function(){
+            $.ajax({
+                type: 'POST',
+                url: '/user/call',
+                data: {
+                    who: whoValue, where: whereValue, when: whenValue
+                },
+                success: function(response){
+                    window.location.href = "/user/call/" + response.data.payload.id;
+                },
+                error: function (xhr, error, code){
+                },
+            });
+        });
+
+        $(document).ready(function(){
+            $("#when_date").datepicker({ altFormat: "yy-mm-dd" });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container border rounded" style="margin-top: 2em; min-height: 20em">
+        <h2>IT TroubleShooting</h2>
+        Let's walk through your issue, shall we?<p>
+
+        <form action="{{ path('user_create_call') }}" method="post" >
+
+            <div class="mb-3">
+                <label for="value" class="form-label">
+                    <h4>Who?</h4>
+                    Is it happening to you or to someone else?
+                </label>
+                <select class="form-select" id="who_select" name="who_select" aria-label="">
+                    <option value=""></option>
+                    <option value="me">Me</option>
+                    <option value="other">Someone else</option>
+                </select>
+                <span class="whoSomeoneElse" style="display: none;">
+                    To who?
+                    <select class="form-select" id="other_select" name="other_select" aria-label="" >
+                        <option value=""></option>
+                    </select>
+                </span>
+            </div>
+
+            <div class="mb-3 whereSelect" style="display: none;">
+                <label for="value" class="form-label">
+                    <h4>Where?</h4>
+                    Is it with the computer or some other device (keyboard, printer) or a software is misbehaving?
+                </label>
+                <select class="form-select" id="where_select" name="where_select" aria-label="">
+                    <option value=""></option>
+                    <option value="device">A device</option>
+                    <option value="software">Software</option>
+                    <option value="unknown">I don't know exactly</option>
+                </select>
+                <span class="whereDevice" style="display: none;">
+                    Which device?
+                    <select class="form-select" id="where_device" name="where_device" aria-label="" >
+                        <option value=""></option>
+                    </select>
+                </span>
+                <span class="whereDescription" style="display: none;">
+                    Please provide a brief description of the problem
+                    <textarea class="form-control" style="resize:none;"></textarea>
+                </span>
+            </div>
+
+            <div class="mb-3 whenSelect" style="display: none;">
+                <label for="value" class="form-label">
+                    <h4>When?</h4>
+                    Did it just started or has it been happening for some time now?
+                </label>
+                <select class="form-select" id="when_select" name="when_select" aria-label="">
+                    <option value=""></option>
+                    <option value="now">Just started</option>
+                    <option value="other">Been a while</option>
+                </select>
+                <span class="whenDate" style="display: none;">
+                    Please provide an aproximate date and time of when the problem started
+                    <input class="form-select" type="text" id="when_date" name="when_date" />
+                </span>
+            </div>
+
+            <div class="mb-3 confirm" style="display: none;">
+                <label for="value" class="form-label">
+                    <h4>Is that all?</h4>
+                    Please, review your information and when you're ready just click "Confirm"
+                </label>
+                <br/>
+                <button type="button" class="btn btn-primary submit"><i class="bi bi-save"></i> Confirm</button>
+            </div>           
+        </form>
+    </div>
+{% endblock %}

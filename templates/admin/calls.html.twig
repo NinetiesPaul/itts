@@ -1,0 +1,36 @@
+{% extends 'admin/home.html.twig' %}
+
+{% block title %}Calls{% endblock %}
+
+{% block javascripts %}
+    <script>
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container border rounded" style="margin-top: 2em; min-height: 20em">
+        <h2>IT TroubleShooting - Calls</h2>
+
+        <table class="table" id="spaceshipsTable">
+            <thead>
+                <tr>
+                    <td style="width: 5%"><b>Id</b></td>
+                    <td><b>Issue</b></td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for call in calls %}
+                    <tr id="row_{{ call.id }}" data-id="{{ call.id }}">
+                        <td>{{ call.id }}</td>
+                        <td>
+                            <a href="/admin/call/{{call.id}}">{{ call.title }}</a><br/>
+                            <small>
+                                Created by <b>{{ call.getOpenedBy().getName() }}</b> on <i>{{ call.getOpenedOn().format('m-d-Y') }}</i>
+                            </small>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

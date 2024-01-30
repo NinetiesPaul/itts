@@ -1,0 +1,82 @@
+{% extends 'admin/home.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).on('click', '.takeCall', function(){
+            var callId = $(this)[0].dataset['id'];
+
+            $.ajax({
+                type: 'POST',
+                url: '/admin/call/take',
+                data: {
+                    id: callId
+                },
+                success: function(response){
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert ('failure')
+                    }
+                },
+                error: function (xhr, error, code){
+                },
+            });
+        });
+
+        $(document).on('click', '.closeCall', function(){
+            var callId = $(this)[0].dataset['id'];
+
+            $.ajax({
+                type: 'POST',
+                url: '/admin/call/close',
+                data: {
+                    id: callId
+                },
+                success: function(response){
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert ('failure')
+                    }
+                },
+                error: function (xhr, error, code){
+                },
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container border rounded" style="margin-top: 2em; min-height: 20em; overflow: auto;">
+        <h2>IT TroubleShooting - Call #{{ call.getId() }}</h2>
+        <h4><i>by {{ call.getOpenedBy().getName() }}</i></h4>
+        <br/>
+
+        <b>Created on:</b> {{ call.getOpenedOn().format('m-d-Y') }}<br/>
+        <b>Taken by:</b> {{ (call.getAnsweredBy()) ? call.getAnsweredBy().getName() : "No one" }}
+
+        {% if call.getClosedBy().getId() is not defined %}
+            {% if call.getAnsweredBy().getId() is defined %}
+                <a class='btn btn-sm btn-primary closeCall' " data-id='{{ call.getId() }}' href='#' >Close</a>
+            {% else %}
+                <a class='btn btn-sm btn-primary takeCall' " data-id='{{ call.getId() }}' href='#' >Take</a>
+            {% endif %}
+        {% endif %}
+        
+        <hr/>
+
+        <h2>Call notes</h2>
+        
+        <span>
+            {% for note in call.getNotes() %}
+                <span style="display: block; {{ (note.getSentBy().getId() == call.getOpenedBy().getId) ? '' : 'text-align: end;' }} ">
+                    <span style="{{ (note.getSentBy().getId() == call.getOpenedBy().getId) ? 'padding-right: 50%' : 'padding-left: 50%;' }}">
+                        <b>{{ note.getSentBy().getName() }}</b> <small><i>({{ note.getSentOn.format('m-d-Y') }}</i>)</small>: {{ note.getText() }}
+                    </span>
+                </span>
+            {% endfor %}
+        </span>
+    </div>
+{% endblock %}

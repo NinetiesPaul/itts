@@ -52,9 +52,27 @@ class Users implements UserInterface
      */
     private $equipment;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Calls::class, mappedBy="opened_by")
+     */
+    private $calls_opened;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Calls::class, mappedBy="answered_by")
+     */
+    private $calls_answered;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Calls::class, mappedBy="closed_by")
+     */
+    private $calls_closed;
+
     public function __construct()
     {
         $this->equipment = new ArrayCollection();
+        $this->calls_opened = new ArrayCollection();
+        $this->calls_answered = new ArrayCollection();
+        $this->calls_closed = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -186,6 +204,96 @@ class Users implements UserInterface
             // set the owning side to null (unless already changed)
             if ($equipment->getUserId() === $this) {
                 $equipment->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Calls>
+     */
+    public function getCallsOpened(): Collection
+    {
+        return $this->calls_opened;
+    }
+
+    public function addCallsOpened(Calls $callsOpened): self
+    {
+        if (!$this->calls_opened->contains($callsOpened)) {
+            $this->calls_opened[] = $callsOpened;
+            $callsOpened->setOpenedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCallsOpened(Calls $callsOpened): self
+    {
+        if ($this->calls_opened->removeElement($callsOpened)) {
+            // set the owning side to null (unless already changed)
+            if ($callsOpened->getOpenedBy() === $this) {
+                $callsOpened->setOpenedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Calls>
+     */
+    public function getCallsAnswered(): Collection
+    {
+        return $this->calls_answered;
+    }
+
+    public function addCallsAnswered(Calls $callsAnswered): self
+    {
+        if (!$this->calls_answered->contains($callsAnswered)) {
+            $this->calls_answered[] = $callsAnswered;
+            $callsAnswered->setAnsweredBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCallsAnswered(Calls $callsAnswered): self
+    {
+        if ($this->calls_answered->removeElement($callsAnswered)) {
+            // set the owning side to null (unless already changed)
+            if ($callsAnswered->getAnsweredBy() === $this) {
+                $callsAnswered->setAnsweredBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Calls>
+     */
+    public function getCallsClosed(): Collection
+    {
+        return $this->calls_closed;
+    }
+
+    public function addCallsClosed(Calls $callsClosed): self
+    {
+        if (!$this->calls_closed->contains($callsClosed)) {
+            $this->calls_closed[] = $callsClosed;
+            $callsClosed->setClosedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCallsClosed(Calls $callsClosed): self
+    {
+        if ($this->calls_closed->removeElement($callsClosed)) {
+            // set the owning side to null (unless already changed)
+            if ($callsClosed->getClosedBy() === $this) {
+                $callsClosed->setClosedBy(null);
             }
         }
 

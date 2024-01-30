@@ -55,8 +55,14 @@ class Equipment
      */
     private $user_id;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Calls::class, mappedBy="equipment")
+     */
+    private $calls;
+
     public function __construct()
     {
+        $this->calls = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -144,6 +150,36 @@ class Equipment
     public function setUserId(?Users $user_id): self
     {
         $this->user_id = $user_id;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Calls>
+     */
+    public function getCalls(): Collection
+    {
+        return $this->calls;
+    }
+
+    public function addCall(Calls $call): self
+    {
+        if (!$this->calls->contains($call)) {
+            $this->calls[] = $call;
+            $call->setEquipment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCall(Calls $call): self
+    {
+        if ($this->calls->removeElement($call)) {
+            // set the owning side to null (unless already changed)
+            if ($call->getEquipment() === $this) {
+                $call->setEquipment(null);
+            }
+        }
 
         return $this;
     }
