@@ -4,24 +4,6 @@
 
 {% block javascripts %}
     <script>
-        $(document).on('click', '#delete', function(){
-            var userId = $(this).closest("tr")[0].dataset['id'];
-
-            $.ajax({
-                type: 'DELETE',
-                url: '/admin/users',
-                data: {
-                    id: userId
-                },
-                success: function(response){
-                    $('#row_' + userId).fadeOut(400, function(){
-                        $(this).remove();
-                    });
-                },
-                error: function (xhr, error, code){
-                },
-            });
-        });
     </script>
 {% endblock %}
 
