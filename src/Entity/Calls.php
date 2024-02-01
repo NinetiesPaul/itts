@@ -62,6 +62,12 @@ class Calls
      */
     private $closed_on;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=StatusType::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $status;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
@@ -182,6 +188,18 @@ class Calls
     public function setClosedOn(?\DateTimeInterface $closed_on): self
     {
         $this->closed_on = $closed_on;
+
+        return $this;
+    }
+
+    public function getStatus(): ?StatusType
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?StatusType $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
