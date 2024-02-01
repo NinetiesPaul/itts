@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\StatusType;
+use App\Custom\Consts\StatusType as StatusTypeEnum;
 
 class UserController extends AbstractController
 {
@@ -40,6 +42,7 @@ class UserController extends AbstractController
         $call = new Calls();
         $call->setOpenedBy($createdBy);
         $call->setOpenedOn($createdOn);
+        $call->setStatus($doctrine->getRepository(StatusType::class)->findOneBy([ 'name' => StatusTypeEnum::NEW ]));
 
         $entityManager->persist($call);
         $entityManager->flush();

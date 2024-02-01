@@ -23,7 +23,7 @@
                     <tr id="row_{{ call.id }}" data-id="{{ call.id }}">
                         <td>{{ call.id }}</td>
                         <td>
-                            <a href="/admin/call/{{call.id}}">{{ call.title }}</a><br/>
+                            <a href="/admin/call/{{call.id}}">{{ call.title }}</a> <span class="badge rounded-pill bg-{{ call.getStatus().getName() == 'new' ? 'warning ' : (call.getStatus().getName() == 'taken') ? 'primary' : 'secondary' }}">{{ call.getStatus().getName()|capitalize }}</span> <br/> 
                             <small>
                                 Created by <b>{{ call.getOpenedBy().getName() }}</b> on <i>{{ call.getOpenedOn().format('m-d-Y') }}</i>
                             </small>

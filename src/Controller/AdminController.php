@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Custom\Consts\StatusType as StatusTypeEnum;
+use App\Entity\StatusType;
 
 class AdminController extends AbstractController
 {
@@ -74,6 +76,7 @@ class AdminController extends AbstractController
 
             $call->setAnsweredBy($user);
             $call->setAnsweredOn($now);
+            $call->setStatus($doctrine->getRepository(StatusType::class)->findOneBy([ 'name' => StatusTypeEnum::TAKEN ]));
             $entityManager->flush();
         } else {
             $message = "Call answer failed: already taken by someone";
@@ -108,6 +111,7 @@ class AdminController extends AbstractController
 
         $call->setClosedBy($user);
         $call->setClosedOn($now);
+        $call->setStatus($doctrine->getRepository(StatusType::class)->findOneBy([ 'name' => StatusTypeEnum::CLOSED ]));
         $entityManager->flush();
 
         return $this->json([

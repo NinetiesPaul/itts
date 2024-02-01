@@ -3,6 +3,29 @@
 {% block title %}Call #{{ call.getId() }}{% endblock %}
 
 {% block javascripts %}
+    <script>
+        $(document).on('click', '.sendNote', function(){
+            var callId = $(this)[0].dataset['id'];
+
+            $.ajax({
+                type: 'POST',
+                url: '/call/note',
+                data: {
+                    id: callId,
+                    text: $(".noteContent").val()
+                },
+                success: function(response){
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert ('failure')
+                    }
+                },
+                error: function (xhr, error, code){
+                },
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block body %}
@@ -11,12 +34,27 @@
         <br/>
 
         <b>Created on:</b> {{ call.getOpenedOn().format('m-d-Y') }}<br/>
-        <b>Taken by:</b> {{ (call.getAnsweredBy()) ? 'Awnsered by' . call.getAnsweredBy() : "No one yet" }}
+        <b>Taken by:</b> {{ (call.getAnsweredBy()) ? call.getAnsweredBy().getName() : "No one" }}<br/>
+        <b>Closed by:</b> {{ (call.getClosedBy()) ? call.getClosedBy().getName() : "No one" }}
 
         <hr/>
+
+        <b>Leave a note:</b>
+            <textarea class="form-control noteContent" style="resize:none;"></textarea><br/>
+            <button class="btn btn-sm btn-primary sendNote" data-id='{{ call.getId() }}'>Send</button>
+
+        <hr/>
+
+        <h2>Call notes</h2>
         
-        {% for note in call.getNotes() %}
-            <b>Me</b> <small><i>{{ note.getSentOn.format('m-d-Y') }}</i></small>: {{ note.getText() }} <br/>
-        {% endfor %}
+        <span>
+            {% for note in call.getNotes() %}
+                <span style="display: block; {{ (note.getSentBy().getId() == call.getOpenedBy().getId) ? '' : 'text-align: end;' }} ">
+                    <span style="{{ (note.getSentBy().getId() == call.getOpenedBy().getId) ? 'padding-right: 50%' : 'padding-left: 50%;' }}">
+                        <b>{{ note.getSentBy().getName() }}</b> <small><i>({{ note.getSentOn.format('m-d-Y') }}</i>)</small>: {{ note.getText() }}
+                    </span>
+                </span>
+            {% endfor %}
+        </span>
     </div>
 {% endblock %}
