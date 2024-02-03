@@ -13,20 +13,28 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Custom\Consts\StatusType as StatusTypeEnum;
+use App\Entity\Department;
+use App\Entity\Equipment;
 use App\Entity\StatusType;
 
 class AdminController extends AbstractController
 {
     #[Route('/admin/home', name: 'admin_home')]
-    public function index(): Response
+    public function index(ManagerRegistry $doctrine): Response
     {
+        $newCalls = $doctrine->getRepository(Calls::class)->findBy([ 'status' => 1 ]);
+        $onGoingCalls = $doctrine->getRepository(Calls::class)->findBy([ 'status' => 2 ]);
+
+        $equipments = $doctrine->getRepository(Equipment::class)->findAll();
+        $departments = $doctrine->getRepository(Department::class)->findAll();
+        $users = $doctrine->getRepository(Users::class)->findAll();
 
         return $this->render('admin/home.html.twig', [
-            'new_calls' => 1,
-            'on_going_calls' => 3,
-            'equipments' => 14,
-            'departments' => 6,
-            'users' => 36
+            'new_calls' => count($newCalls),
+            'on_going_calls' => count($onGoingCalls),
+            'equipments' => count($equipments),
+            'departments' => count($departments),
+            'users' => count($users)
         ]);
     }
 
