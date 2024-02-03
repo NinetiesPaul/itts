@@ -12,8 +12,13 @@ class MainController extends AbstractController
     #[Route('/', name: 'app_index')]
     public function index(AuthenticationUtils $authenticationUtils): Response
     {
-        $error = $authenticationUtils->getLastAuthenticationError();
+        $user = $this->getUser();
 
+        if ($user) {
+            return $this->redirectToRoute('auth_success');
+        }
+
+        $error = $authenticationUtils->getLastAuthenticationError();
         return $this->render('index.html.twig', [
             'error' => $error
         ]);
